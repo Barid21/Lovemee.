@@ -307,8 +307,7 @@
             <p>Dibuat dengan sepenuh cinta khusus untuk <span class="font-semibold text-roseGold-700">Siti Nur Jannah</span> 🤍</p>
         </div>
     </div>
-
-    <!-- JavaScript for interactive features -->
+     <!-- JavaScript for interactive features -->
     <script>
         // Array of love messages
         const loveMessages = [
@@ -322,4 +321,121 @@
         let currentMsgIndex = 0;
 
         function nextLoveMessage() {
-    
+            const messageEl = document.getElementById('message-text');
+            if (!messageEl) return;
+
+            messageEl.style.opacity = '0';
+            setTimeout(() => {
+                currentMsgIndex = (currentMsgIndex + 1) % loveMessages.length;
+                messageEl.textContent = loveMessages[currentMsgIndex];
+                messageEl.style.opacity = '1';
+            }, 220);
+        }
+
+        // Confession button: Tentu Saja, Mau Banget!
+        function acceptLove() {
+            const actionsEl = document.getElementById('confession-actions');
+            const resultEl = document.getElementById('confession-result');
+            const btnNo = document.getElementById('btn-no');
+
+            if (actionsEl) actionsEl.classList.add('hidden');
+            if (btnNo) btnNo.remove(); // Hapus tombol kabur jika sudah dipindah ke body
+            if (resultEl) resultEl.classList.remove('hidden');
+
+            triggerConfetti(50);
+        }
+
+        // Confession runaway button: Ehe, Mau Pikir-pikir
+        let dodgeCount = 0;
+        const playfulTexts = [
+            "Ehe, Mau Pikir-pikir 🤭",
+            "Eits, gak kena! 😜",
+            "Masa mikir lagi sih? 🥺",
+            "Gak boleh pilih ini wlee 😝",
+            "Klik yang pink aja ya 🤍"
+        ];
+
+        function moveButton(event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            const btnNo = document.getElementById('btn-no');
+            if (!btnNo) return;
+
+            // Pindahkan ke document.body agar tidak terpotong container glass-card
+            if (btnNo.parentElement !== document.body) {
+                document.body.appendChild(btnNo);
+                btnNo.style.position = 'fixed';
+                btnNo.style.zIndex = '9999';
+                btnNo.style.width = 'auto';
+                btnNo.classList.add('shadow-lg');
+            }
+
+            dodgeCount++;
+            btnNo.textContent = playfulTexts[dodgeCount % playfulTexts.length];
+
+            const margin = 20;
+            const btnWidth = btnNo.offsetWidth || 200;
+            const btnHeight = btnNo.offsetHeight || 48;
+
+            const maxX = Math.max(margin, window.innerWidth - btnWidth - margin);
+            const maxY = Math.max(margin, window.innerHeight - btnHeight - margin);
+
+            const randomX = Math.floor(Math.random() * (maxX - margin + 1)) + margin;
+            const randomY = Math.floor(Math.random() * (maxY - margin + 1)) + margin;
+
+            btnNo.style.left = `${randomX}px`;
+            btnNo.style.top = `${randomY}px`;
+        }
+
+        // Confetti / Hearts Burst Effect
+        function triggerConfetti(amount = 30) {
+            const symbols = ['🤍', '💖', '💕', '✨', '🌸', '🥰'];
+            for (let i = 0; i < amount; i++) {
+                setTimeout(() => {
+                    const piece = document.createElement('span');
+                    piece.className = 'confetti-piece';
+                    piece.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                    piece.style.left = `${Math.random() * 96}vw`;
+                    piece.style.fontSize = `${Math.floor(Math.random() * 14) + 16}px`;
+                    piece.style.animationDuration = `${(Math.random() * 2 + 2.2).toFixed(2)}s`;
+
+                    document.body.appendChild(piece);
+
+                    setTimeout(() => {
+                        piece.remove();
+                    }, 4500);
+                }, i * 35);
+            }
+        }
+
+        // Ambient Floating Hearts in Background
+        function initFloatingHearts() {
+            const container = document.getElementById('hearts-container');
+            if (!container) return;
+
+            const heartIcons = ['🤍', '💗', '✨'];
+            setInterval(() => {
+                if (container.childElementCount > 15) return;
+
+                const heart = document.createElement('span');
+                heart.className = 'floating-heart';
+                heart.textContent = heartIcons[Math.floor(Math.random() * heartIcons.length)];
+                heart.style.left = `${Math.random() * 100}%`;
+                heart.style.fontSize = `${Math.floor(Math.random() * 12) + 12}px`;
+                heart.style.animationDuration = `${Math.floor(Math.random() * 4) + 6}s`;
+
+                container.appendChild(heart);
+
+                setTimeout(() => {
+                    heart.remove();
+                }, 10000);
+            }, 900);
+        }
+
+        document.addEventListener('DOMContentLoaded', initFloatingHearts);
+    </script>
+</body>
+</html>
